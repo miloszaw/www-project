@@ -1,8 +1,11 @@
 import React from 'react';
+
 import {
-  Typography
+    Divider,
+    Grid, List, ListItem, ListItemIcon, ListItemText, Paper
 } from '@material-ui/core';
 import './userDetail.css';
+import {LocationOnSharp, Work} from "@material-ui/icons";
 
 
 /**
@@ -11,17 +14,43 @@ import './userDetail.css';
 class UserDetail extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+        "user": window.cs142models.userModel(props.match.params.userId),
+    }
+
   }
 
-  render() {
+  componentDidUpdate(prevProps) {
+      if (this.props.match.params.userId !== prevProps.match.params.userId) {
+          this.setState({ user: window.cs142models.userModel(this.props.match.params.userId)});
+      }
+  }
+
+    render() {
     return (
-      <Typography variant="body1">
-        This should be the UserDetail view of the PhotoShare app. Since
-        it is invoked from React Router the params from the route will be
-        in property match. So this should show details of user:
-        {this.props.match.params.userId}. You can fetch the model for the
-        user from window.cs142models.userModel(userId).
-      </Typography>
+        <Grid item xs={12}>
+            <Paper>
+                <List>
+                    <ListItem>
+                        <ListItemIcon>
+                            <LocationOnSharp/>
+                        </ListItemIcon>
+                        <ListItemText primary={`${this.state.user.location}`}/>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemIcon>
+                            <Work/>
+                        </ListItemIcon>
+                        <ListItemText primary={`${this.state.user.occupation}`}/>
+                    </ListItem>
+                    <Divider/>
+                    <ListItem>
+                        <ListItemText primary={`${this.state.user.description}`}/>
+                    </ListItem>
+                </List>
+            </Paper>
+        </Grid>
     );
   }
 }

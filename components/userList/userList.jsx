@@ -23,7 +23,7 @@ class UserList extends React.Component {
 
   getFormattedUserList() {
     return this.state.users.map((value) => (
-          <ListItem key={value._id} button divider component="a" href={`#/users/${value._id}`}>
+          <ListItem key={value._id} button divider component="a" href={`#/user/${value._id}`}>
             <ListItemText primary={`${value.first_name} ${value.last_name}`} />
           </ListItem>
     ));

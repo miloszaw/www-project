@@ -11,6 +11,7 @@ import './styles/main.css';
 // import necessary components
 import TopBar from './components/topBar/TopBar';
 import UserDetail from './components/userDetail/UserDetail';
+import UserPage from './components/userPage/UserPage';
 import UserList from './components/userList/UserList';
 import UserPhotos from './components/userPhotos/UserPhotos';
 
@@ -47,11 +48,8 @@ class PhotoShare extends React.Component {
                   so you should delete this Route component once you get started.
                   </Typography>}
               />
-              <Route path="/users/:userId"
-                render={ props => <UserDetail {...props} /> }
-              />
-              <Route path="/photos/:userId"
-                render ={ props => <UserPhotos {...props} /> }
+              <Route path="/user/:userId?"
+                render={ props => <UserPage {...props}/> }
               />
               <Route path="/users" component={UserList}  />
             </Switch>

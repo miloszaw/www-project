@@ -1,0 +1,20 @@
+
+.userFullName {
+    text-align: center;
+    margin-bottom: 0.25em !important;
+}
+
+.userDetails {
+    list-style-type: none;
+    padding: 15px;
+}
+
+.userDetails li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.flexContainer {
+    display: flex;
+    text-align: center;
+}
