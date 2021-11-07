@@ -15,33 +15,30 @@ import './userList.css';
 class UserList extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      "users": window.cs142models.userListModel(),
+    }
+  }
+
+  getFormattedUserList() {
+    return this.state.users.map((value) => (
+          <ListItem key={value._id} button divider component="a" href={`#/users/${value._id}`}>
+            <ListItemText primary={`${value.first_name} ${value.last_name}`} />
+          </ListItem>
+    ));
   }
 
   render() {
     return (
       <div>
-        <Typography variant="body1">
-          This is the user list, which takes up 3/12 of the window.
-          You might choose to use <a href="https://material-ui.com/demos/lists/">Lists</a> and <a href="https://material-ui.com/demos/dividers">Dividers</a> to
-          display your users like so:
+        <Typography className={"users"} variant="button">
+          Users
+          <Divider/>
         </Typography>
-        <List component="nav">
-          <ListItem>
-            <ListItemText primary="Item #1" />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Item #2" />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Item #3" />
-          </ListItem>
-          <Divider />
+        <List className={"nav"} component="nav">
+          {this.getFormattedUserList()}
         </List>
-        <Typography variant="body1">
-          The model comes in from window.cs142models.userListModel()
-        </Typography>
       </div>
     );
   }
