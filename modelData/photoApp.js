@@ -86,6 +86,7 @@
    var photo12 = {_id: "57231f1a30e4351f4e9f4be8", date_time: "2008-10-16 17:12:28", file_name: "kenobi4.jpg", user_id: rk._id};
 
    var photos = [photo1, photo2, photo3, photo4, photo5, photo6, photo7,
+      photo8, photo6, photo7,
       photo8, photo9, photo10, photo11, photo12];
 
    // Create initial comments.

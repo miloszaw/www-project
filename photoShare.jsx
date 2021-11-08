@@ -35,7 +35,7 @@ class PhotoShare extends React.Component {
           </Paper>
         </Grid>
         <Grid item sm={9}>
-          <Paper className="cs142-main-grid-item">
+          <Paper className="uPage">
             <Switch>
             <Route exact path="/"
                 render={() =>
@@ -48,7 +48,7 @@ class PhotoShare extends React.Component {
                   so you should delete this Route component once you get started.
                   </Typography>}
               />
-              <Route path="/user/:userId?"
+              <Route path="/user/:userId"
                 render={ props => <UserPage {...props}/> }
               />
               <Route path="/users" component={UserList}  />

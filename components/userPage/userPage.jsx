@@ -31,27 +31,29 @@ class UserPage extends React.Component {
                     </Grid>
                     <Grid item xs={12}>
                         <List className={"flexContainer"}>
-                            <ListItem button component="a" href={`#/user/${this.props.match.params.userId}/details`}>
+                            <ListItem button component="a" href={`#${this.props.match.url}/details`}>
                                 <ListItemText primary="Details"/>
                             </ListItem>
-                            <ListItem button component="a" href={`#/user/${this.props.match.params.userId}/photos`}>
+                            <ListItem button component="a" href={`#${this.props.match.url}/photos`}>
                                 <ListItemText primary="Photos"/>
                             </ListItem>
                         </List>
                     </Grid>
-                    <Switch>
-                        <Route exact path="/user/:userId"
-                               render={ props => <UserDetail {...props}/> }
-                        />
-                        <Route path={`/user/:userId/details`}
-                               render={ props => <UserDetail {...props}/> }
-                        />
-                        <Route path={`/user/:userId/photos`}
-                               render={ props => <UserPhotos {...props}/> }
-                        />
+                    <Divider/>
+                    <Grid item xs={12}>
+                        <Switch>
+                            <Route exact path="/user/:userId"
+                                   render={ props => <UserDetail {...props}/> }
+                            />
+                            <Route path={`/user/:userId/details`}
+                                   render={ props => <UserDetail {...props}/> }
+                            />
+                            <Route path={`/user/:userId/photos`}
+                                   render={ props => <UserPhotos {...props}/> }
+                            />
 
-                    </Switch>
-
+                        </Switch>
+                    </Grid>
                 </Grid>
             </HashRouter>
 
