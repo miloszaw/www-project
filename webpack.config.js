@@ -1,6 +1,7 @@
 module.exports = {
   entry: {
     photoShare: './photoShare.jsx',
+    statusInfo: './statusInfo.jsx',
   },
   module: {
     rules: [

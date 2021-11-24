@@ -8,6 +8,7 @@ import {
 }
 from '@material-ui/core';
 import './userList.css';
+import fetchModel from "../../lib/fetchModelData";
 
 /**
  * Define UserList, a React componment of CS142 project #5
@@ -17,17 +18,22 @@ class UserList extends React.Component {
     super(props);
 
     this.state = {
-      "users": window.cs142models.userListModel(),
+      "users": "",
     }
   }
 
-  getFormattedUserList() {
-    return this.state.users.map((value) => (
-          <ListItem key={value._id} button divider component="a" href={`#/user/${value._id}`}>
-            <ListItemText primary={`${value.first_name} ${value.last_name}`} />
-          </ListItem>
-    ));
+  componentWillMount() {
+      fetchModel("/user/list").then( result => {
+          this.setState({
+              users: JSON.parse(result).map((value) => (
+                  <ListItem key={value._id} button divider component="a" href={`#/user/${value._id}`}>
+                      <ListItemText primary={`${value.first_name} ${value.last_name}`} />
+                  </ListItem>
+              ))
+          });
+      });
   }
+
 
   render() {
     return (
@@ -37,7 +43,7 @@ class UserList extends React.Component {
           <Divider/>
         </Typography>
         <List className={"nav"} component="nav">
-          {this.getFormattedUserList()}
+          {this.state.users}
         </List>
       </div>
     );

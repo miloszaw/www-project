@@ -5,6 +5,7 @@ import {
   Typography
 } from '@material-ui/core';
 import './userPhotos.css';
+import fetchModel from "../../lib/fetchModelData";
 
 
 
@@ -15,6 +16,9 @@ class UserPhotos extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      "photos" : "",
+    }
   }
 
 
@@ -33,24 +37,30 @@ class UserPhotos extends React.Component {
     return <Grid container spacing={1.5}>{grid}</Grid>
   }
 
+  fetchPhotos(userId) {
+    fetchModel("/photosOfUser/" + userId).then( result => {
+      this.setState({photos: JSON.parse(result)});
+    });
+  }
+
   photoGrid(userId) {
-    let photos = window.cs142models.photoOfUserModel(userId);
+    this.fetchPhotos(userId);
     let grid = [];
-    for (let i = 0; i < photos.length; i++) {
+    for (let i = 0; i < this.state.photos.length; i++) {
       grid.push(
           <Grid item xs={12} sm={6} md={4}>
             <Paper>
-              <img src={`../../images/`+photos[i].file_name} alt={photos[i].file_name} className={"photo"}/>
+              <img src={`../../images/`+this.state.photos[i].file_name} alt={this.state.photos[i].file_name} className={"photo"}/>
               <Grid container spacing={0.25}>
                 <Grid item xs={12}>
-                  <Typography variant="button">{cs142models.userModel(photos[i].user_id).first_name} {cs142models.userModel(photos[i].user_id).last_name} |</Typography>
-                  <Typography variant="caption">{photos[i].date_time}</Typography>
+                  <Typography variant="button">{cs142models.userModel(this.state.photos[i].user_id).first_name} {cs142models.userModel(this.state.photos[i].user_id).last_name} |</Typography>
+                  <Typography variant="caption">{this.state.photos[i].date_time}</Typography>
 
                 </Grid>
 
               </Grid>
               <Divider/>
-              {photos[i].comments && (this.commentGrid(photos[i].comments))}
+              {this.state.photos[i].comments && (this.commentGrid(this.state.photos[i].comments))}
             </Paper>
           </Grid>)
     }

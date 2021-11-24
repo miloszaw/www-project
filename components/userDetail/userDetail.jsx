@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import './userDetail.css';
 import {LocationOnSharp, Work} from "@material-ui/icons";
+import fetchModel from "../../lib/fetchModelData";
 
 
 /**
@@ -16,14 +17,22 @@ class UserDetail extends React.Component {
     super(props);
 
     this.state = {
-        "user": window.cs142models.userModel(props.match.params.userId),
+        "user": "",
     }
 
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+      fetchModel("/user/" + this.props.match.params.userId).then( result => {
+          this.setState({user: JSON.parse(result)});
+      });
+  }
+
+    componentDidUpdate(prevProps) {
       if (this.props.match.params.userId !== prevProps.match.params.userId) {
-          this.setState({ user: window.cs142models.userModel(this.props.match.params.userId)});
+          fetchModel("/user/" + this.props.match.params.userId).then( result => {
+              this.setState({user: JSON.parse(result)});
+          });
       }
   }
 

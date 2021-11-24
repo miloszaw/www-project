@@ -3,6 +3,7 @@ import {HashRouter, Route, Switch} from "react-router-dom";
 import {Divider, Grid, List, ListItem, ListItemText, Typography} from "@material-ui/core";
 import UserDetail from "../userDetail/userDetail";
 import UserPhotos from "../userPhotos/userPhotos";
+import fetchModel from "../../lib/fetchModelData";
 
 
 class UserPage extends React.Component {
@@ -10,14 +11,22 @@ class UserPage extends React.Component {
         super(props);
 
         this.state = {
-            "user": window.cs142models.userModel(props.match.params.userId),
+            "user": "",
         }
 
     }
 
+    componentDidMount() {
+        fetchModel("/user/" + this.props.match.params.userId).then( result => {
+            this.setState({user: JSON.parse(result)});
+        });
+    }
+
     componentDidUpdate(prevProps) {
         if (this.props.match.params.userId !== prevProps.match.params.userId) {
-            this.setState({ user: window.cs142models.userModel(this.props.match.params.userId)});
+            fetchModel("/user/" + this.props.match.params.userId).then( result => {
+                this.setState({user: JSON.parse(result)});
+            });
         }
     }
 
