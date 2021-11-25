@@ -89,7 +89,7 @@ class UserPhotos extends React.Component {
       let comment = comments[i];
       grid.push(
           <Grid item xs={12}>
-            <Typography variant="button"><a href={`#/user/`+comment.user_id+`/details`}>{comment.user.first_name} {comment.user.last_name} |</a></Typography>
+            <Typography variant="button"><a href={`#/user/`+comment.user._id+`/details`}>{comment.user.first_name} {comment.user.last_name} |</a></Typography>
             <Typography variant="caption">{comment.date_time}</Typography>
             <br/>
             <Typography variant="subtitle2">{comment.comment}</Typography>
