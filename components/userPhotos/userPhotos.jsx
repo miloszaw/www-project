@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Divider,
-  Grid, List, ListItem, Paper,
+  Grid, Paper,
   Typography
 } from '@material-ui/core';
 import './userPhotos.css';
@@ -18,6 +18,8 @@ class UserPhotos extends React.Component {
 
     this.state = {
       "photos" : "",
+      "photoGrid" : "",
+      "user" : "",
     }
   }
 
@@ -43,8 +45,18 @@ class UserPhotos extends React.Component {
     });
   }
 
-  photoGrid(userId) {
-    this.fetchPhotos(userId);
+  fetchUser(userId) {
+    fetchModel("/user/" + userId).then( result => {
+      this.setState({user: JSON.parse(result)});
+    });
+  }
+
+  componentDidMount() {
+    this.fetchPhotos(this.props.match.params.userId);
+    this.fetchUser(this.props.match.params.userId);
+  }
+
+  photoGrid() {
     let grid = [];
     for (let i = 0; i < this.state.photos.length; i++) {
       grid.push(
@@ -53,7 +65,7 @@ class UserPhotos extends React.Component {
               <img src={`../../images/`+this.state.photos[i].file_name} alt={this.state.photos[i].file_name} className={"photo"}/>
               <Grid container spacing={0.25}>
                 <Grid item xs={12}>
-                  <Typography variant="button">{cs142models.userModel(this.state.photos[i].user_id).first_name} {cs142models.userModel(this.state.photos[i].user_id).last_name} |</Typography>
+                  <Typography variant="button">{this.state.user.first_name} {this.state.user.last_name} |</Typography>
                   <Typography variant="caption">{this.state.photos[i].date_time}</Typography>
 
                 </Grid>
@@ -71,7 +83,7 @@ class UserPhotos extends React.Component {
 
   render() {
     return (
-        this.photoGrid(this.props.match.params.userId)
+        <div>{this.photoGrid()}</div>
     );
   }
 }

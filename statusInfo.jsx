@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
 import React from "react";
 import fetchModel from "./lib/fetchModelData";
-var Promise = require('Promise').default
 
 
 class StatusInfo extends React.Component {

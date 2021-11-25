@@ -17,7 +17,7 @@ class TopBar extends React.Component {
       <AppBar className="cs142-topbar-appBar" position="absolute">
         <Toolbar>
           <Typography variant="h5" color="inherit">
-              This is the TopBar component
+              <a href="#/" className={"topBarTitle"}>Milosz A. Wudarczyk&#39;s Awesome App</a>
           </Typography>
         </Toolbar>
       </AppBar>
