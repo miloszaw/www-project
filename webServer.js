@@ -128,6 +128,9 @@ app.get('/test/:p1', function (request, response) {
 app.get('/user/list', function (request, response) {
     // Lists all users
     User.find(function (err, users) {
+        if (users.length === 0) {
+            response.status(500).send("No users found");
+        }
         response.status(200).send(users);
     });
 
@@ -139,14 +142,13 @@ app.get('/user/list', function (request, response) {
 app.get('/user/:id', function (request, response) {
     var id = request.params.id; // user ID
     // Finds user by filtering by user ID
-    User.findOne({_id: id}, function (err, user) {
-
-        if (err) {
+    User.find({_id: id}, function (err, user) {
+        if (user.length === 0) {
             console.log('User with _id:' + id + ' not found.');
             response.status(400).send('Not found');
         }
 
-        response.status(200).send(user);
+        response.status(200).send(user[0]);
     });
 
 
