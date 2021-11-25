@@ -17,12 +17,14 @@ class UserPage extends React.Component {
     }
 
     componentDidMount() {
+        // Fetch user information
         fetchModel("/user/" + this.props.match.params.userId).then( result => {
             this.setState({user: JSON.parse(result)});
         });
     }
 
     componentDidUpdate(prevProps) {
+        // Fetch updated user information
         if (this.props.match.params.userId !== prevProps.match.params.userId) {
             fetchModel("/user/" + this.props.match.params.userId).then( result => {
                 this.setState({user: JSON.parse(result)});
@@ -65,20 +67,6 @@ class UserPage extends React.Component {
                     </Grid>
                 </Grid>
             </HashRouter>
-
-            /*
-
-             */
-
-            /*<Typography variant="body1">
-              This should be the UserDetail view of the PhotoShare app. Since
-              it is invoked from React Router the params from the route will be
-              in property match. So this should show details of user:
-              {this.props.match.params.userId}. You can fetch the model for the
-              user from window.cs142models.userModel(userId).
-            </Typography>
-
-             */
         );
     }
 

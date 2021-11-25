@@ -23,12 +23,15 @@ class UserDetail extends React.Component {
   }
 
   componentDidMount() {
+      // Fetch user information
       fetchModel("/user/" + this.props.match.params.userId).then( result => {
           this.setState({user: JSON.parse(result)});
       });
   }
 
+
     componentDidUpdate(prevProps) {
+      // Fetch updated user information
       if (this.props.match.params.userId !== prevProps.match.params.userId) {
           fetchModel("/user/" + this.props.match.params.userId).then( result => {
               this.setState({user: JSON.parse(result)});

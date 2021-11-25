@@ -23,6 +23,7 @@ class UserList extends React.Component {
   }
 
   componentDidMount() {
+      // Fetch user list
       fetchModel("/user/list").then( result => {
           this.setState({
               users: JSON.parse(result).map((value) => (

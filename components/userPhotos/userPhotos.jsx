@@ -23,22 +23,10 @@ class UserPhotos extends React.Component {
     }
   }
 
-
-  commentGrid(comments) {
-    let grid = [];
-    for (let i = 0; i < comments.length; i++) {
-      let comment = comments[i];
-      grid.push(
-          <Grid item xs={12}>
-            <Typography variant="button"><a href={`#/user/`+comment.user_id+`/details`}>{comment.user.first_name} {comment.user.last_name} |</a></Typography>
-            <Typography variant="caption">{comment.date_time}</Typography>
-            <br/>
-            <Typography variant="subtitle2">{comment.comment}</Typography>
-          </Grid>)
-    }
-    return <Grid container spacing={1.5}>{grid}</Grid>
-  }
-
+  /**
+   * Fetches photos for a given userId
+   * @param userId user ID
+   */
   fetchPhotos(userId) {
     fetchModel("/photosOfUser/" + userId).then( result => {
       console.log(result);
@@ -46,6 +34,10 @@ class UserPhotos extends React.Component {
     });
   }
 
+  /**
+   * Fetches user for a given userId
+   * @param userId user ID
+   */
   fetchUser(userId) {
     fetchModel("/user/" + userId).then( result => {
       this.setState({user: JSON.parse(result)});
@@ -57,6 +49,10 @@ class UserPhotos extends React.Component {
     this.fetchUser(this.props.match.params.userId);
   }
 
+  /**
+   * Constructs a photo grid
+   * @returns {JSX.Element} Photo grid
+   */
   photoGrid() {
     let grid = [];
     for (let i = 0; i < this.state.photos.length; i++) {
@@ -80,6 +76,26 @@ class UserPhotos extends React.Component {
 
     return <Grid container spacing={2}>{grid}</Grid>;
 
+  }
+
+  /**
+   * Constructs a comment grid
+   * @param comments array containing comments
+   * @returns {JSX.Element} Comment grid
+   */
+  commentGrid(comments) {
+    let grid = [];
+    for (let i = 0; i < comments.length; i++) {
+      let comment = comments[i];
+      grid.push(
+          <Grid item xs={12}>
+            <Typography variant="button"><a href={`#/user/`+comment.user_id+`/details`}>{comment.user.first_name} {comment.user.last_name} |</a></Typography>
+            <Typography variant="caption">{comment.date_time}</Typography>
+            <br/>
+            <Typography variant="subtitle2">{comment.comment}</Typography>
+          </Grid>)
+    }
+    return <Grid container spacing={1.5}>{grid}</Grid>
   }
 
   render() {

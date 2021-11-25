@@ -44,9 +44,6 @@ var SchemaInfo = require('./schema/schemaInfo.js');
 var express = require('express');
 var app = express();
 
-// XXX - Your submission should work without this line. Comment out or delete this line for tests and before submission!
-var cs142models = require('./modelData/photoApp.js').cs142models;
-
 mongoose.connect('mongodb://localhost/cs142project6', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
@@ -129,6 +126,7 @@ app.get('/test/:p1', function (request, response) {
  * URL /user/list - Return all the User object.
  */
 app.get('/user/list', function (request, response) {
+    // Lists all users
     User.find(function (err, users) {
         response.status(200).send(users);
     });
@@ -139,7 +137,8 @@ app.get('/user/list', function (request, response) {
  * URL /user/:id - Return the information for User (id)
  */
 app.get('/user/:id', function (request, response) {
-    var id = request.params.id;
+    var id = request.params.id; // user ID
+    // Finds user by filtering by user ID
     User.findOne({_id: id}, function (err, user) {
 
         if (err) {
@@ -158,8 +157,8 @@ app.get('/user/:id', function (request, response) {
  * URL /photosOfUser/:id - Return the Photos for User (id)
  */
 app.get('/photosOfUser/:id', function (request, response) {
-    var id = request.params.id;
-
+    var id = request.params.id; // user ID
+    // Finds photos of user by filtering by user ID
     Photo.find({user_id: id}, function (err, photos) {
         if (photos.length === 0) {
             console.log('Photos for user with _id:' + id + ' not found.');
@@ -167,9 +166,11 @@ app.get('/photosOfUser/:id', function (request, response) {
             return;
         }
 
+        // User comment promises
         let userPromises = [];
         let uPhotos = [];
-        for (let i = 0; i < photos.length; i++) {
+
+        for (let i = 0; i < photos.length; i++) { // For every photo
 
             let photo = {
                 "_id": "",
@@ -186,14 +187,14 @@ app.get('/photosOfUser/:id', function (request, response) {
 
             uPhotos.push(photo);
 
-            for (let j = 0; j < photos[i].comments.length; j++) {
+            for (let j = 0; j < photos[i].comments.length; j++) { // For every comment
 
                 let id = photos[i].comments[j].user_id;
 
-                userPromises.push(
-                    new Promise((resolve, reject) =>
+                userPromises.push( // New comment promise
+                    new Promise((resolve) =>
                     {
-                        User.findOne({_id: id}, function (err, user) {
+                        User.findOne({_id: id}, function (err, user) { // Finds user by ID for a given comment
                             let comment = {
                                 "comment": "",
                                 "date_time": "",
@@ -202,16 +203,17 @@ app.get('/photosOfUser/:id', function (request, response) {
 
                             comment.comment = photos[i].comments[j].comment;
                             comment.date_time = photos[i].comments[j].date_time;
+                            // Updates comment to feature the user
                             comment.user = user;
-                            uPhotos[i].comments.push(comment);
 
+                            uPhotos[i].comments.push(comment);
                             resolve(true);
                         })
                     }));
             }
         }
 
-        Promise.all(userPromises).then( function() {
+        Promise.all(userPromises).then( function() { // When all promises resolve, return photos
             response.status(200).send(uPhotos);
         });
 
