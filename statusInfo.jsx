@@ -21,11 +21,7 @@ class StatusInfo extends React.Component {
 
     render() {
         return (
-            <div>
-                <h1>test</h1>
-                <p>{"Status: "+ JSON.stringify(this.state.data)}</p>
-                <input type="button"/>
-            </div>
+            this.state.data
         );
     }
 }

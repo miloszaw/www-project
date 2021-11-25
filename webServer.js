@@ -49,6 +49,7 @@ var cs142models = require('./modelData/photoApp.js').cs142models;
 
 mongoose.connect('mongodb://localhost/cs142project6', { useNewUrlParser: true, useUnifiedTopology: true });
 
+
 // We have the express static module (http://expressjs.com/en/starter/static-files.html) do all
 // the work for us.
 app.use(express.static(__dirname));
@@ -89,9 +90,7 @@ app.get('/test/:p1', function (request, response) {
                 return;
             }
 
-            // We got the object - return it in JSON format.
-            console.log('SchemaInfo', info[0]);
-            response.end(JSON.stringify(info[0]));
+            response.status(200).send(info);
         });
     } else if (param === 'counts') {
         // In order to return the counts of all the collections we need to do an async
@@ -130,7 +129,10 @@ app.get('/test/:p1', function (request, response) {
  * URL /user/list - Return all the User object.
  */
 app.get('/user/list', function (request, response) {
-    response.status(200).send(cs142models.userListModel());
+    User.find(function (err, users) {
+        response.status(200).send(users);
+    });
+
 });
 
 /*
@@ -138,13 +140,18 @@ app.get('/user/list', function (request, response) {
  */
 app.get('/user/:id', function (request, response) {
     var id = request.params.id;
-    var user = cs142models.userModel(id);
-    if (user === null) {
-        console.log('User with _id:' + id + ' not found.');
-        response.status(400).send('Not found');
-        return;
-    }
-    response.status(200).send(user);
+    User.findOne({_id: id}, function (err, user) {
+
+        if (err) {
+            console.log('User with _id:' + id + ' not found.');
+            response.status(400).send('Not found');
+        }
+
+        response.status(200).send(user);
+    });
+
+
+
 });
 
 /*
@@ -152,13 +159,65 @@ app.get('/user/:id', function (request, response) {
  */
 app.get('/photosOfUser/:id', function (request, response) {
     var id = request.params.id;
-    var photos = cs142models.photoOfUserModel(id);
-    if (photos.length === 0) {
-        console.log('Photos for user with _id:' + id + ' not found.');
-        response.status(400).send('Not found');
-        return;
-    }
-    response.status(200).send(photos);
+
+    Photo.find({user_id: id}, function (err, photos) {
+        if (photos.length === 0) {
+            console.log('Photos for user with _id:' + id + ' not found.');
+            response.status(400).send('Not found');
+            return;
+        }
+
+        let userPromises = [];
+        let uPhotos = [];
+        for (let i = 0; i < photos.length; i++) {
+
+            let photo = {
+                "_id": "",
+                "file_name": "",
+                "date_time": "",
+                "user_id": "",
+                "comments": [],
+            }
+
+            photo._id = photos[i]._id;
+            photo.file_name = photos[i].file_name;
+            photo.date_time = photos[i].date_time;
+            photo.user_id = photos[i].user_id;
+
+            uPhotos.push(photo);
+
+            for (let j = 0; j < photos[i].comments.length; j++) {
+
+                let id = photos[i].comments[j].user_id;
+
+                userPromises.push(
+                    new Promise((resolve, reject) =>
+                    {
+                        User.findOne({_id: id}, function (err, user) {
+                            let comment = {
+                                "comment": "",
+                                "date_time": "",
+                                "user": "",
+                            }
+
+                            comment.comment = photos[i].comments[j].comment;
+                            comment.date_time = photos[i].comments[j].date_time;
+                            comment.user = user;
+                            uPhotos[i].comments.push(comment);
+
+                            resolve(true);
+                        })
+                    }));
+            }
+        }
+
+        Promise.all(userPromises).then( function() {
+            response.status(200).send(uPhotos);
+        });
+
+    });
+
+
 });
 
 
